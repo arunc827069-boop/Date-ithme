@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Date Me - Matches</title>
+<style>
+body { font-family: Arial; margin:0; background:#ffe4e6; }
+.navbar { background-color:#ff4d6d; padding:15px; text-align:center; }
+.navbar a { color:white; text-decoration:none; margin:0 15px; font-weight:bold; }
+.container { text-align:center; margin:30px auto; max-width:1000px; }
+h1 { color:#ff4d6d; }
+.matches { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; margin-top:30px; }
+.profile-card { background:white; padding:15px; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.1); text-align:center; }
+.profile-card img { width:100px; height:100px; border-radius:50%; object-fit:cover; margin-bottom:10px; cursor:pointer; }
+.profile-card h3 { margin:10px 0 5px 0; color:#ff4d6d; }
+.profile-card p { font-size:14px; color:#555; margin:5px 0; }
+</style>
+</head>
+<body><header class="site-header">
+  <img src="images/logo.png" alt="Date Me Logo" class="logo">
+  <span class="site-name">Date Me</span>
+</header>
+
+<div class="navbar">
+    <a href="home.html">Home</a>
+    <a href="profile.html">Profile</a>
+    <a href="matches.html">Matches</a>
+    <a href="settings.html">Settings</a>
+    <a href="login.html">Logout</a>
+</div>
+
+<div class="container">
+    <h1>Your Matches Based on Interests ❤️</h1>
+    <div class="matches" id="matches"></div>
+</div>
+
+<script>
+const matchesContainer = document.getElementById('matches');
+
+// Load all profiles from localStorage
+const allProfiles = JSON.parse(localStorage.getItem('allProfiles')) || [];
+
+// Simulate current user's interests
+// You can replace this with real interests from signup/profile page
+const currentUserInterests = ["Music","Movies","Travel"];
+
+// Filter users with at least one common interest
+const matchedUsers = allProfiles.filter(user => {
+    return user.interests.some(i => currentUserInterests.includes(i));
+});
+
+// Show matched users
+if(matchedUsers.length === 0){
+    matchesContainer.innerHTML = "<p>No matches found with your interests yet 😢</p>";
+} else {
+    matchedUsers.forEach(user => {
+        const card = document.createElement('div');
+        card.classList.add('profile-card');
+        card.innerHTML = `
+            <img src="${user.image}" alt="${user.name}" title="Click to view profile">
+            <h3>${user.name}</h3>
+            <p>User ID: ${user.id}</p>
+            <p>Age: ${user.age}</p>
+            <p>Bio: ${user.bio}</p>
+            <p>Interests: ${user.interests.join(", ")}</p>
+        `;
+
+        // Clicking image opens detailed profile
+        card.querySelector('img').addEventListener('click', () => {
+            window.location.href = `profile.html?name=${encodeURIComponent(user.name)}&age=${user.age}&bio=${encodeURIComponent(user.bio)}&image=${encodeURIComponent(user.image)}&id=${user.id}&interests=${encodeURIComponent(user.interests.join(","))}`;
+        });
+
+        matchesContainer.appendChild(card);
+    });
+}
+</script>
+</body>
+</html>

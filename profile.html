@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Me - Profile / Matches</title>
+    <style>
+        body { font-family: Arial; margin:0; background:#ffe4e6; }
+        .navbar { background-color:#ff4d6d; padding:15px; text-align:center; }
+        .navbar a { color:white; text-decoration:none; margin:0 15px; font-weight:bold; }
+        .container { text-align:center; margin:50px auto; max-width:1000px; }
+        h1 { color:#ff4d6d; }
+        .matches { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; margin-top:30px; }
+        .profile-card { background:white; padding:15px; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.1); text-align:center; }
+        .profile-card img { width:100px; height:100px; border-radius:50%; object-fit:cover; margin-bottom:10px; }
+        .profile-card h3 { margin:10px 0 5px 0; color:#ff4d6d; }
+        .profile-card p { font-size:14px; color:#555; margin:5px 0; }
+    </style>
+</head>
+<body>
+<header class="site-header">
+  <img src="images/logo.png" alt="Date Me Logo" class="logo">
+  <span class="site-name">Date Me</span>
+</header>
+
+    <div class="navbar">
+        <a href="home.html">Home</a>
+        <a href="profile.html">Profile / Matches</a>
+        <a href="matches.html">Matches</a>
+        <a href="settings.html">Settings</a>
+        <a href="login.html">Logout</a>
+    </div>
+
+    <div class="container">
+        <h1>Your Mutual Likes ❤️</h1>
+        <p>These are users who liked you back!</p>
+
+        <div class="matches" id="matches"></div>
+    </div>
+
+    <script>
+        const matchesContainer = document.getElementById('matches');
+
+        // Get your likes from localStorage
+        const likedProfiles = JSON.parse(localStorage.getItem('likedProfiles')) || [];
+
+        // Simulate "users who liked you back"
+        // We'll randomly select some of your liked profiles as mutual likes
+        const mutualLikes = likedProfiles.filter(id => Math.random() < 0.5); // 50% chance for demo
+
+        if(mutualLikes.length === 0) {
+            matchesContainer.innerHTML = "<p>No mutual likes yet. Keep swiping! 😎</p>";
+        } else {
+            mutualLikes.forEach((userID, index) => {
+                // Create dummy profile info
+                const userName = `User ${parseInt(userID.slice(2))}`; // extract number from DM00001
+                const age = Math.floor(Math.random() * 22) + 18;
+                const bio = `This is a short bio for ${userName}.`;
+                const imageUrl = `https://i.pravatar.cc/150?img=${index % 70 + 1}`;
+
+                const card = document.createElement('div');
+                card.classList.add('profile-card');
+                card.innerHTML = `
+                    <img src="${imageUrl}" alt="${userName}">
+                    <h3>${userName}</h3>
+                    <p>User ID: ${userID}</p>
+                    <p>Age: ${age}</p>
+                    <p>${bio}</p>
+                `;
+                matchesContainer.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>
